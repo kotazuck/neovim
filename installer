@@ -117,3 +117,5 @@ rm ./installer.sh
 
 echo "# Open nvim and ':call dein#install()'"
 
+echo "# echo \"alias vim='nvim'\""
+
