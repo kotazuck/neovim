@@ -106,16 +106,20 @@ echo "# NeoVim Installed"
 
 cd $XDG_CONFIG_HOME
 
+if [ -e "nvim" ]; then
+  mv nvim _nvim
+fi
+
 git clone git@github.com:kotazuck/neovim.git nvim 2>&1 >/dev/null
 
 cd nvim
 
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-sh ./installer.sh $XDG_CONFIG_HOME/dein
+sh ./installer.sh $XDG_CONFIG_HOME/nvim/dein
 
 rm ./installer.sh
 
 echo "# Open nvim and ':call dein#install()'"
 
-echo "# echo \"alias vim='nvim'\""
+echo "# echo \"alias vim='nvim'\" >> ~/.bash_profile"
 
