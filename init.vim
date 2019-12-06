@@ -45,6 +45,8 @@ if dein#load_state('~/.config/nvim/dein')
   "call dein#add('Shougo/neosnippet-snippets')
 
   call dein#add('tpope/vim-commentary')
+  call dein#add('tpope/vim-surround')
+  call dein#add('tpope/vim-markdown')
   call dein#add('scrooloose/nerdtree')
 
   call dein#add('Shougo/deoplete.nvim')
@@ -76,3 +78,13 @@ let g:NERDTreeDirArrows = 1
 " deoplete
 let g:deoplete#enable_at_startup=1
 let g:deoplete#auto_completion_start_length=1
+
+
+" Key Bindings
+inoremap <silent>jj <Esc>j
+inoremap <silent>kk <Esc>k
+
+nnoremap <silent><Enter> o<Esc>
+
+cnoremap <silent> inite :vs ~/.config/nvim/init.vim
+cnoremap <silent> inits :source ~/.config/nvim/init.vim
