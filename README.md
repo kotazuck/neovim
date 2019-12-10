@@ -22,7 +22,7 @@ $ bash ./install
 - [tpope/vim-surround（ds"で囲ってる""を削除したり）](https://github.com/tpope/vim-surround)
 - [scrooloose/nerdtree（ファイルツリー）](https://github.com/scrooloose/nerdtree)
 - [plasticboy/vim-markdown（マークダウンを色々助けてくれる）](https://github.com/plasticboy/vim-markdown)
-- [mg979/vim-visual-multi（マルチカーソル。多機能すぎるが<C-n>だけでも価値あり）](https://github.com/mg979/vim-visual-multi)
+- [mg979/vim-visual-multi（マルチカーソル。多機能すぎるが\<C-n\>だけでも価値あり）](https://github.com/mg979/vim-visual-multi)
 - [alvan/vim-closetag（html のタグを自動でクローズ）](https://github.com/alvan/vim-closetag)
 - [cohama/lexima.vim（かっこ等の囲い文字の閉じを補完）](https://github.com/cohama/lexima.vim)
 - [mattn/emmet-vim（言わずと知れた Emmet）](https://github.com/mattn/emmet-vim)
@@ -36,28 +36,28 @@ $ bash ./install
 
 # Key Binding
 
-Leader: <Space>
+Leader: \<Space\>
 
-| Mode                         | Custom Key | Behavior            | Description                                                                 |
-| :--------------------------- | :--------- | :------------------ | :-------------------------------------------------------------------------- |
-| Normal(nore)                 | <Leader>s  | <Esc>:w<CR>         | ファイル保存                                                                |
-| Normal Visual Insert Command | <Leader>ex | <Esc>               | エスケープ                                                                  |
-| Normal(nore)                 | <Leader>d  | <Esc>:bd<CR>        | 編集中のファイルを閉じる（vim は閉じない）                                  |
-| Normal(nore)                 | <Leader>w  | <C-w>w              | 分割画面の移動（次へ）                                                      |
-| Normal(nore)                 | <Leader>h  | <C-w>h              | 分割画面の移動（左へ）                                                      |
-| Normal(nore)                 | <Leader>j  | <C-w>j              | 分割画面の移動（下へ）                                                      |
-| Normal(nore)                 | <Leader>k  | <C-w>k              | 分割画面の移動（上へ）                                                      |
-| Normal(nore)                 | <Leader>l  | <C-w>l              | 分割画面の移動（右へ）                                                      |
-| All                          | <C-e>l     | <Esc>               | ノーマルモードへ                                                            |
-| Normal(nore)                 | <Leader>a  | :NERDTreeToggle<CR> | NERDTree の表示切り替え                                                     |
-| Insert                       | jj         | <Esc>j              | インサートモードで jj はノーマルモードへ                                    |
-| Insert                       | kk         | <Esc>j              | インサートモードで kk はノーマルモードへ                                    |
-| Normal(nore)                 | <C-Left>   | ^                   | Ctrl + Left で行頭（インデントを考慮）へ                                    |
-| Insert(nore)                 | <C-Left>   | <Esc>^i             | インサートモード中 Ctrl + Left で行頭（インデントを考慮）でインサートモード |
-| Normal(nore)                 | <C-Right>  | \$                  | インサートモード中 Ctrl + Right で行頭でインサートモード                    |
-| Insert(nore)                 | <C-Right>  | <Esc>A              | Ctrl + Left で行頭（インデントを考慮）へ                                    |
-| Insert(nore)                 | ,,         | <C-y>,              | emmet 起動                                                                  |
-| Visual Normal                | ga         | <Plug>(EasyAlign)   | 整列（vim-easy-align)                                                       |
+| Mode                         | Custom Key   | Behavior              | Description                                                                 |
+| :--------------------------- | :----------- | :-------------------- | :-------------------------------------------------------------------------- |
+| Normal(nore)                 | \<Leader\>s  | \<Esc\>:w\<CR\>       | ファイル保存                                                                |
+| Normal Visual Insert Command | \<Leader\>ex | \<Esc\>               | エスケープ                                                                  |
+| Normal(nore)                 | \<Leader\>d  | \<Esc\>:bd\<CR\>      | 編集中のファイルを閉じる（vim は閉じない）                                  |
+| Normal(nore)                 | \<Leader\>w  | \<C-w\>w              | 分割画面の移動（次へ）                                                      |
+| Normal(nore)                 | \<Leader\>h  | \<C-w\>h              | 分割画面の移動（左へ）                                                      |
+| Normal(nore)                 | \<Leader\>j  | \<C-w\>j              | 分割画面の移動（下へ）                                                      |
+| Normal(nore)                 | \<Leader\>k  | \<C-w\>k              | 分割画面の移動（上へ）                                                      |
+| Normal(nore)                 | \<Leader\>l  | \<C-w\>l              | 分割画面の移動（右へ）                                                      |
+| All                          | \<C-e\>l     | \<Esc\>               | ノーマルモードへ                                                            |
+| Normal(nore)                 | \<Leader\>a  | :NERDTreeToggle\<CR\> | NERDTree の表示切り替え                                                     |
+| Insert                       | jj           | \<Esc\>j              | インサートモードで jj はノーマルモードへ                                    |
+| Insert                       | kk           | \<Esc\>j              | インサートモードで kk はノーマルモードへ                                    |
+| Normal(nore)                 | \<C-Left\>   | ^                     | Ctrl + Left で行頭（インデントを考慮）へ                                    |
+| Insert(nore)                 | \<C-Left\>   | \<Esc\>^i             | インサートモード中 Ctrl + Left で行頭（インデントを考慮）でインサートモード |
+| Normal(nore)                 | \<C-Right\>  | \$                    | インサートモード中 Ctrl + Right で行頭でインサートモード                    |
+| Insert(nore)                 | \<C-Right\>  | \<Esc\>A              | Ctrl + Left で行頭（インデントを考慮）へ                                    |
+| Insert(nore)                 | ,,           | \<C-y\>,              | emmet 起動                                                                  |
+| Visual Normal                | ga           | \<Plug\>(EasyAlign)   | 整列（vim-easy-align)                                                       |
 
 他にも少し設定しているがよく使うのは以上。
 プラグインのキーバインドは各プラグインを参照
