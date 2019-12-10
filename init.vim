@@ -41,6 +41,9 @@ set statusline+=\ %3l:%-2c\         " line + column
 set statusline+=%#Cursor#       " colour
 set statusline+=\ %3p%%\                " percentage
 
+" htmlのマッチするタグに%でジャンプ
+source $VIMRUNTIME/macros/matchit.vim
+
 hi Comment ctermfg=gray
 
 if has('mouse')
@@ -64,8 +67,15 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('~/.config/nvim/dein/repos/github.com/Shougo/dein.vim')
 
   " Add or remove your plugins here like this:
-  "call dein#add('Shougo/neosnippet.config/nvim')
-  "call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('Shougo/deoplete.nvim')
+  let g:deoplete#enable_at_startup=1
+  call dein#add('Shougo/neosnippet')
+  call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('Shougo/neco-syntax')
+
+  " html5 & css3
+  call dein#add('othree/html5.vim', {"ft": ["html", "css", "php", "vue"]})
+  call dein#add('hail2u/vim-css3-syntax', {"ft": ["html", "css", "php", "vue"]})
 
   " Comment [ g c c ]
   call dein#add('tpope/vim-commentary')
@@ -82,7 +92,7 @@ if dein#load_state('~/.config/nvim/dein')
   " Auto close ()[]{}""''
   call dein#add('cohama/lexima.vim')
   " Emmet
-  call dein#add('mattn/emmet-vim')
+  call dein#add('mattn/emmet-vim', {"on_ft": ["html", "css", "php", "vue"]})
 
   " Align
   call dein#add('junegunn/vim-easy-align')
@@ -90,10 +100,7 @@ if dein#load_state('~/.config/nvim/dein')
   " Ale
   call dein#add('w0rp/ale')
 
-  call dein#add('Shougo/deoplete.nvim')
-  call dein#add('Shougo/neco-syntax')
-
-  call dein#add('phpactor/phpactor')
+  call dein#add('phpactor/phpactor', { "build": "composer install", "on_ft": ["php"] })
 
   " Required:
   call dein#end()
@@ -119,8 +126,22 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 let g:NERDTreeDirArrows = 1
 
 " deoplete
-let g:deoplete#enable_at_startup=1
-let g:deoplete#auto_completion_start_length=1
+let g:deoplete#auto_completion_start_length=2
+"Tab補完の設定
+inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+      \ neosnippet#expandable_or_jumpable() ?
+      \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+
+" neosnippet
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+" vim-commentary
+autocmd FileType html setlocal commentstring=<!--\ %s -->
 
 " vim-closetag
 let closetag_filenames = '*.html,*.xhtml,*.php,*.vue'
@@ -143,7 +164,7 @@ let g:ale_fixers = {
 \   'css': ['prettier'],
 \   'php': ['prettier'],
 \}   
-let g:ale_lint_on_text_changed = 0
+" let g:ale_lint_on_text_changed = 0
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_use_local_config = 1
 
@@ -155,8 +176,8 @@ let mapleader = "\<Space>"
 nnoremap <silent><leader>s <Esc>:w<CR>
 
 " Space e でEsc
-map <silent><leader>ee <Esc>
-map! <silent><leader>ee <Esc>
+map <silent><leader>ex <Esc>
+map! <silent><leader>ex <Esc>
 
 " Space d で編集中のペインを閉じる（:bd）
 nnoremap <silent><leader>d <Esc>:bd<CR>
@@ -249,6 +270,9 @@ cnoremap <silent>inite :vs ~/.config/nvim/init.vim
 " emmet
 " ,,でemmet起動
 imap ,, <C-y>,
+let g:user_emmet_settings = {
+\   'lang' : 'ja'
+\ }
 
 " Align
 " Start interactive EasyAlign in visual mode (e.g. vipga)
