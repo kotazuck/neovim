@@ -17,6 +17,29 @@ set showmatch
 set title
 set backspace=indent,eol,start
 set inccommand=split
+set laststatus=2
+set statusline=
+set statusline+=%#DiffAdd#%{(mode()=='n')?'\ \ NORMAL\ ':''}
+set statusline+=%#DiffChange#%{(mode()=='i')?'\ \ INSERT\ ':''}
+set statusline+=%#DiffDelete#%{(mode()=='r')?'\ \ RPLACE\ ':''}
+set statusline+=%#Cursor#%{(mode()=='v')?'\ \ VISUAL\ ':''}
+set statusline+=\ %n\           " buffer number
+set statusline+=%#Visual#       " colour
+set statusline+=%{&paste?'\ PASTE\ ':''}
+set statusline+=%{&spell?'\ SPELL\ ':''}
+set statusline+=%#CursorIM#     " colour
+set statusline+=%R                        " readonly flag
+set statusline+=%M                        " modified [+] flag
+set statusline+=%#Cursor#               " colour
+set statusline+=%#CursorLine#     " colour
+set statusline+=\ %t\                   " short file name
+set statusline+=%=                          " right align
+set statusline+=%#CursorLine#   " colour
+set statusline+=\ %Y\                   " file type
+set statusline+=%#CursorIM#     " colour
+set statusline+=\ %3l:%-2c\         " line + column
+set statusline+=%#Cursor#       " colour
+set statusline+=\ %3p%%\                " percentage
 
 hi Comment ctermfg=gray
 
@@ -44,14 +67,28 @@ if dein#load_state('~/.config/nvim/dein')
   "call dein#add('Shougo/neosnippet.config/nvim')
   "call dein#add('Shougo/neosnippet-snippets')
 
+  " Comment [ g c c ]
   call dein#add('tpope/vim-commentary')
+  " Surround [ c s surround ] [ d s surround ]
   call dein#add('tpope/vim-surround')
-  call dein#add('tpope/vim-markdown')
+  " Markdown
+  call dein#add('plasticboy/vim-markdown')
+  " NERDTree
   call dein#add('scrooloose/nerdtree')
-  call dein#add('terryma/vim-multiple-cursors')
+  " Multiple Cursors
+  call dein#add('mg979/vim-visual-multi')
+  " Auto close html tags
   call dein#add('alvan/vim-closetag')
+  " Auto close ()[]{}""''
   call dein#add('cohama/lexima.vim')
+  " Emmet
   call dein#add('mattn/emmet-vim')
+
+  " Align
+  call dein#add('junegunn/vim-easy-align')
+
+  " Ale
+  call dein#add('w0rp/ale')
 
   call dein#add('Shougo/deoplete.nvim')
   call dein#add('Shougo/neco-syntax')
@@ -76,6 +113,7 @@ endif
 
 " NERDTree setting
 let g:NERDTreeShowBookmarks=1
+let g:NERDTreeShowHidden = 1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 let g:NERDTreeDirArrows = 1
@@ -83,29 +121,6 @@ let g:NERDTreeDirArrows = 1
 " deoplete
 let g:deoplete#enable_at_startup=1
 let g:deoplete#auto_completion_start_length=1
-
-" multi-cursors
-function! Multiple_cursors_before()
-  if exists(':NeoCompleteLock')==2
-    exe 'NeoCompleteLock'
-  endif
-endfunction
-
-function! Multiple_cursors_after()
-  if exists(':NeoCompleteUnlock')==2
-    exe 'NeoCompleteUnlock'
-  endif
-endfunction
-
-
-let g:multi_cursor_start_word_key      = '<C-n>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<C-n>'
-let g:multi_cursor_select_all_key      = 'g<A-n>'
-let g:multi_cursor_next_key            = '<C-n>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
 
 " vim-closetag
 let closetag_filenames = '*.html,*.xhtml,*.php,*.vue'
@@ -117,17 +132,46 @@ let g:closetag_emptyTags_caseSensitive = 1
 let g:closetag_shortcut = '>'
 let g:closetag_close_shortcut = '<leader>>'
 
+" vim-markdown
+let g:vim_markdown_folding_disabled = 1
+
+" ALE
+let g:ale_fixers = {
+\   'javascript': ['prettier'],
+\   'markdown': ['prettier'],
+\   'html': ['prettier'],
+\   'css': ['prettier'],
+\   'php': ['prettier'],
+\}   
+let g:ale_lint_on_text_changed = 0
+let g:ale_fix_on_save = 1
+let g:ale_javascript_prettier_use_local_config = 1
+
 
 " Key Bindings
 let mapleader = "\<Space>"
 
-" Space + s で保存
+" Space s で保存
 nnoremap <silent><leader>s <Esc>:w<CR>
+
+" Space e でEsc
+map <silent><leader>ee <Esc>
+map! <silent><leader>ee <Esc>
+
+" Space d で編集中のペインを閉じる（:bd）
+nnoremap <silent><leader>d <Esc>:bd<CR>
+
+" タブ移動をSpace + hjklで
 nnoremap <silent><leader>w <C-w>w
 nnoremap <silent><leader>h <C-w>h
 nnoremap <silent><leader>j <C-w>j
 nnoremap <silent><leader>k <C-w>k
 nnoremap <silent><leader>l <C-w>l
+
+" Ctrl+eでNormalへ
+map <silent><C-e> <Esc>
+map! <silent><C-e> <Esc>
+lmap <silent><C-e> <Esc>
 
 " Phpactor
 " useの補完
@@ -159,9 +203,6 @@ map <C-a> :NERDTreeToggle<CR>
 
 inoremap <silent>jj <Esc>j
 inoremap <silent>kk <Esc>k
-
-" NormalでEnterを押すと改行
-nnoremap <silent><Enter> o<Esc>
 
 " 画面スクロールをCtrl+矢印で
 "noremap <silent><C-Up> <C-u> 
@@ -196,10 +237,6 @@ vnoremap <silent><S-k> k
 vnoremap <silent><S-j> j
 vnoremap <silent><S-h> h
 vnoremap <silent><S-l> l
-inoremap <silent><S-k> <Esc>vk
-inoremap <silent><S-j> <Esc>vj
-inoremap <silent><S-h> <Esc>vh
-inoremap <silent><S-l> <Esc>vl
 
 " VisualでEnterはヤンク
 vnoremap <silent><Enter> y
@@ -212,3 +249,10 @@ cnoremap <silent>inite :vs ~/.config/nvim/init.vim
 " emmet
 " ,,でemmet起動
 imap ,, <C-y>,
+
+" Align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
