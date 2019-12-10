@@ -5,10 +5,18 @@ $ curl https://raw.githubusercontent.com/kotazuck/neovim/master/installer > inst
 $ bash ./install
 ```
 
-もし何か不具合で止まったら
+- neovim のインストール
+- dein.vim のインストール
 
-- neovim がインストールされたか
--
+を行う。
+`~/.config/nvim`
+にこのリポジトリが落ちる。
+
+必要であれば下記を`~/.bashrc`に追加して neovim を標準にする。
+
+```sh
+echo "alias vim=\"nvim\""
+```
 
 # Packages
 
@@ -64,9 +72,9 @@ Leader: \<Space\>
 
 # Require
 
-## Python3._, Python2._
+## Python3, Python2
 
-deoplete は Python に依存している。3.\*系だけで良いかも。
+deoplete は Python に依存している。3 系だけで良いかも。
 
 ```sh
 # 3系
