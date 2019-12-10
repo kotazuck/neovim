@@ -140,21 +140,19 @@ if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
 
-" vim-commentary
-autocmd FileType html setlocal commentstring=<!--\ %s -->
-
 " vim-closetag
 let closetag_filenames = '*.html,*.xhtml,*.php,*.vue'
 let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.vue'
 let g:closetag_filetypes = 'html,xhtml,php,vue'
 let g:closetag_xhtml_filetypes = 'xhtml,jsx,vue'
-
 let g:closetag_emptyTags_caseSensitive = 1
 let g:closetag_shortcut = '>'
 let g:closetag_close_shortcut = '<leader>>'
 
 " vim-markdown
 let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " ALE
 let g:ale_fixers = {
@@ -164,10 +162,8 @@ let g:ale_fixers = {
 \   'css': ['prettier'],
 \   'php': ['prettier'],
 \}   
-" let g:ale_lint_on_text_changed = 0
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_use_local_config = 1
-
 
 " Key Bindings
 let mapleader = "\<Space>"
