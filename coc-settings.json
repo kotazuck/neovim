@@ -1,0 +1,10 @@
+{
+  "suggest.noselect": true,
+  "suggest.preferCompleteThanJumpPlaceholder": true,
+  "languageserver": {
+    "vue" : {
+      "command": "hls",
+      "filetypes": ["vue"]
+    }
+  }
+}
