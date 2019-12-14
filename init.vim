@@ -18,6 +18,7 @@ set showmatch
 set title
 set backspace=indent,eol,start
 set inccommand=split
+set imdisable
 set laststatus=2
 set statusline=
 set statusline+=%#DiffAdd#%{(mode()=='n')?'\ \ NORMAL\ ':''}
@@ -74,6 +75,9 @@ if dein#load_state('~/.config/nvim/dein')
   call dein#add('Shougo/neosnippet-snippets')
   call dein#add('Shougo/neco-syntax')
 
+  " Indent
+  call dein#add('Yggdroot/indentLine')
+
   " auto complete
   call dein#add('neoclide/coc.nvim', {'rev': 'release', 'build': 'npm install -g vue-language-server'})
 
@@ -128,6 +132,12 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
+
+" Indent
+let g:indentLine_color_term = 239
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_enabled = 1
+
 
 " NERDTree setting
 let g:NERDTreeShowBookmarks=1
@@ -190,6 +200,7 @@ let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'vue': ['eslint'],
 \   'css': ['stylelint'],
+\   'php': ['php'],
 \}
 
 " 行数の左に常にマーク用領域を表示
@@ -214,7 +225,8 @@ let g:ale_javascript_eslint_options = '--ignore-pattern "!.eslintrc.js"'
 let mapleader = "\<Space>"
 
 " Space s で保存
-nnoremap <silent><leader>s <Esc>:w<CR>
+nnoremap <silent><C-s> <Esc>:w<CR>
+inoremap <silent><C-s> <Esc>:w<CR>
 
 " Space e でEsc
 map <silent><leader>ex <Esc>
@@ -230,12 +242,19 @@ nnoremap <silent><leader>j <C-w>j
 nnoremap <silent><leader>k <C-w>k
 nnoremap <silent><leader>l <C-w>l
 
+" Ctrl+hjklでインサートモード中でも移動
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+
 " Ctrl+eでNormalへ
 map <silent><C-e> <Esc>
 map! <silent><C-e> <Esc>
 lmap <silent><C-e> <Esc>
 
 " Phpactor
+autocmd FileType php setlocal omnifunc=phpactor#Complete
 " useの補完
 au FileType php nmap <buffer> <silent><Leader>u      :<C-u>call phpactor#UseAdd()<CR>
 " コンテキストメニューの起動(カーソル下のクラスやメンバに対して実行可能な選択肢を表示してくれます)
@@ -245,7 +264,7 @@ au FileType php nmap <buffer> <silent><Leader>nn     :<C-u>call phpactor#Navigat
 " カーソル下のクラスやメンバの定義元にジャンプ
 au FileType php nmap <buffer> <silent><Leader>o      :<C-u>call phpactor#GotoDefinition()<CR>
 " 編集中のクラスに対し各種の変更を加える(コンストラクタ補完、インタフェース実装など)
-au FileType php nmap <buffer> <silent><Leader>tt     :<C-u>call phpactor#Transform()<CR>
+" au FileType php nmap <buffer> <silent><Leader>tr     :<C-u>call phpactor#Transform()<CR>
 " 新しいクラスを生成する(編集中のファイルに)
 au FileType php nmap <buffer> <silent><Leader>cc     :<C-u>call phpactor#ClassNew()<CR>
 " 選択した範囲を変数に抽出する
@@ -264,14 +283,15 @@ au FileType php vmap <buffer> <silent><Leader>hh     :<C-u>call phpactor#Hover()
 map <C-a> :NERDTreeToggle<CR>
 
 " 次のタブを開く
-nnoremap <silent><leader>t gt
+nnoremap <silent><C-t> gt
+inoremap <silent><C-t> <Esc>gt
+
+" タブを閉じる
+nnoremap <silent><C-x> <Esc>:bd<CR>
+inoremap <silent><C-x> <Esc>:bd<CR>
 
 inoremap <silent>jj <Esc>j
 inoremap <silent>kk <Esc>k
-
-" 画面スクロールをCtrl+矢印で
-"noremap <silent><C-Up> <C-u> 
-"noremap <silent><C-Down> <C-d> 
 
 " Ctrl+左右で行頭行末へ移動
 noremap <silent><C-Left> 0
@@ -292,12 +312,6 @@ inoremap <silent><S-Up> <Esc>vk
 inoremap <silent><S-Down> <Esc>vj
 inoremap <silent><S-Left> <Esc>vh
 inoremap <silent><S-Right> <Esc>vl
-
-" Shift + hjklで選択モード
-nnoremap <silent><S-h> <Esc>vh
-nnoremap <silent><S-l> <Esc>vl
-vnoremap <silent><S-h> h
-vnoremap <silent><S-l> l
 
 " VisualでEnterはヤンク
 vnoremap <silent><Enter> y
@@ -327,109 +341,108 @@ let g:node_host_prog = '/usr/local/bin/neovim-node-host'
 
 " if hidden is not set, TextEdit might fail.
 set hidden
-
 " Some servers have issues with backup files, see #649
 set nobackup
 set nowritebackup
 
-" don't give |ins-completion-menu| messages.
-set shortmess+=c
+" " don't give |ins-completion-menu| messages.
+" set shortmess+=c
 
-" always show signcolumns
-set signcolumn=yes
+" " always show signcolumns
+" set signcolumn=yes
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" " Use tab for trigger completion with characters ahead and navigate.
+" " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" " Use <c-space> to trigger completion.
+" inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" " Coc only does snippet and additional edit on confirm.
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" " Or use `complete_info` if your vim support it, like:
+" " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" " Use `[g` and `]g` to navigate diagnostics
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" " Remap keys for gotos
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
 
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+" " Use K to show documentation in preview window
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   else
+"     call CocAction('doHover')
+"   endif
+" endfunction
 
 
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" " Highlight symbol under cursor on CursorHold
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+" " Remap for rename current word
+" nmap <leader>rn <Plug>(coc-rename)
 
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" " Remap for format selected region
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+" xmap <leader>a  <Plug>(coc-codeaction-selected)
+" nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
+" " Remap for do codeAction of current line
+" nmap <leader>ac  <Plug>(coc-codeaction)
+" " Fix autofix problem of current line
+" nmap <leader>qf  <Plug>(coc-fix-current)
 
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
+" " Create mappings for function text object, requires document symbols feature of languageserver.
+" xmap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" omap if <Plug>(coc-funcobj-i)
+" omap af <Plug>(coc-funcobj-a)
 
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <C-d> <Plug>(coc-range-select)
-xmap <silent> <C-d> <Plug>(coc-range-select)
+" " Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+" nmap <silent> <C-d> <Plug>(coc-range-select)
+" xmap <silent> <C-d> <Plug>(coc-range-select)
 
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
+" " Use `:Format` to format current buffer
+" command! -nargs=0 Format :call CocAction('format')
 
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+" " Use `:Fold` to fold current buffer
+" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" " use `:OR` for organize import of current buffer
+" command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" " Add status line support, for integration with other plugin, checkout `:h coc-status`
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Language別
 
