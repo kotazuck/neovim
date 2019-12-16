@@ -1,10 +1,19 @@
 {
-  "suggest.noselect": true,
+  "suggest.noselect": false,
   "suggest.preferCompleteThanJumpPlaceholder": true,
+  "go.goplsPath": "/Users/Admin/go/bin/gopls",
   "languageserver": {
     "vue" : {
       "command": "hls",
       "filetypes": ["vue"]
+    },
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
     }
   }
 }
