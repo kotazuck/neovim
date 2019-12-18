@@ -1,18 +1,15 @@
 #!/bin/bash
 
 # Install NeoVim
-
 # Required
 
-# - python 3
-# - pip 3
-#   - pynvim
-
+# Chk root user
 superuser=1
 if [ ${EUID:-${UID}} = 0 ]; then
   superuser=0
 fi
 
+# XDG_CONFIG_HOME
 if [ $XDG_CONFIG_HOME == ""]; then
   echo "export XDG_CONFIG_HOME=\"$HOME/.config\"" >> $HOME/.bash_profile
 fi
@@ -53,19 +50,19 @@ fi
 
 
 if [ "$dist" == "mac" ]; then
+  # Chk brew has installed
   brewexist=1
   if type brew >/dev/null 2>&1; then
     brewexist=0
   fi
 
+  # brew has not installed
   if [ $brewexist -eq 1 ]; then
     echo "# Install Homebrew"
     xcode-select --install
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     export PATH="/usr/local/bin:$PATH"
     export PATH="/usr/local/sbin:$PATH"
-    echo "export PATH=\"/usr/local/bin:$PATH\"" >> $HOME/.bash_profile
-    echo "export PATH=\"/usr/local/sbin:$PATH\"" >> $HOME/.bash_profile
   fi
   
   if type brew >/dev/null 2>&1; then
@@ -75,6 +72,7 @@ if [ "$dist" == "mac" ]; then
     echo "# Homebrew not found" >&2
     exit 1
   fi
+
 elif [ "$dist" == "centos" ] || [ "$dist" == "amazon" ]; then
   yum="sudo yum"
   if [ $superuser -eq 0 ]; then
@@ -111,6 +109,17 @@ if [ -e "nvim" ]; then
 fi
 
 git clone git@github.com:kotazuck/neovim.git nvim 2>&1 >/dev/null
+
+if [ $? -ne 0 ]; then
+  echo "# git clone failed." >&2
+  echo "# Do you have github.com account?" >&2
+  exit 1
+fi
+
+if [ ! -e "nvim" ]; then
+  echo "# $XDG_CONFIG_HOME/nvim not found." >&2
+  exit 1
+fi
 
 cd nvim
 

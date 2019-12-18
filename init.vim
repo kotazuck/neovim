@@ -12,6 +12,8 @@ set fileencodings=iso-2022-jp,euc-jp,utf-8,ucs-2,cp932,sjis
 set tabstop=2
 set shiftwidth=2
 set cursorline
+set colorcolumn=80,120
+highlight ColorColumn guibg=#202020 ctermbg=lightgray
 set number
 set showmode
 set showmatch
@@ -146,5 +148,5 @@ vnoremap <silent><Enter> y
 noremap <silent><leader>r <Esc>:<C-u>source ~/.config/nvim/init.vim<CR>
 cnoremap <silent>inite :<C-u>tabe ~/.config/nvim/init.vim
 
-let g:node_host_prog = '/usr/local/lib/node_modules/neovim/bin/cli.js'
+let g:node_host_prog = '/usr/local/bin/neovim-node-host'
 

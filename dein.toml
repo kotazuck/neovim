@@ -9,10 +9,10 @@ repo = 'Shougo/deoplete.nvim'
 hook_add = '''
   let g:deoplete#enable_at_startup=1
   let g:deoplete#auto_completion_start_length=2
-  "Tab補完の設定
+  " Tab補完の設定
   inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+  \     neosnippet#expandable_or_jumpable() ?
+  \    "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
 '''
 
 [[plugins]]
@@ -70,7 +70,6 @@ hook_add = '''
 
 [[plugins]]
 repo = 'jistr/vim-nerdtree-tabs'
-depends = ['scrooloose/nerdtree']
 hook_add = '''
   let g:nerdtree_tabs_open_on_console_startup = 1
   let g:nerdtree_tabs_focus_on_files = 1
@@ -115,27 +114,38 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'w0rp/ale'
-build = 'npm install -g eslint eslint-babel eslint-config-vue eslint-plugin-vue eslint-plugin-import stylelint-config-standard stylelint-processor-html prettier @prettier/plugin-php'
+repo = 'prettier/vim-prettier'
+build = 'yarn install'
+on_ft = ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'lua', 'php', 'python', 'ruby', 'html', 'swift']
 hook_add = '''
-  let g:ale_fixers = {
-  \   'javascript': ['prettier'],
-  \   'vue': ['prettier'],
-  \   'markdown': ['prettier'],
-  \   'html': ['prettier'],
-  \   'css': ['prettier'],
-  \   'php': ['prettier'],
-  \}   
-  let g:ale_fix_on_save = 1
-  let g:ale_javascript_prettier_use_local_config = 1
+  let g:prettier#exec_cmd_path = "/usr/local/bin/prettier"
+
+  " prettier
+  augroup fixprettier
+    au!
+    let g:prettier#autoformat = 0
+    let g:prettier#quickfix_enabled = 0
+    au BufwritePre *.js,*.jsx,*.ts,*.css,*.json,*.md,*.vue,*.yaml,*.html,*.php PrettierAsync
+  augroup End
+'''
+
+[[plugins]]
+repo = 'dense-analysis/ale'
+hook_add = '''
+
+  " fixer
+  " ale_fixerに登録されているもののみ
+  let g:ale_fix_on_save = 0
 
   " lint
   let g:ale_linters = {
   \   'javascript': ['eslint'],
   \   'vue': ['eslint'],
   \   'css': ['stylelint'],
-  \   'php': ['php'],
+  \   'php': ['intelephense'],
   \}
+  " ale_lintersに登録されているもののみ
+  let g:ale_linters_explicit = 1
 
   " 行数の左に常にマーク用領域を表示
   let g:ale_sign_column_always = 1
@@ -153,7 +163,7 @@ hook_add = '''
   let g:ale_keep_list_window_open = 0 
 
   " eslint
-  let g:ale_javascript_eslint_options = '--ignore-pattern "!.eslintrc.js"'
+  let g:ale_javascript_eslint_options = '--ignore-pattern "!.eslintrc.js --ignore-pattern "!prettier.config.js"'
 '''
 
 [[plugins]]
