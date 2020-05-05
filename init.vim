@@ -6,9 +6,10 @@ set t_Co=256
 set autoindent
 set smartindent
 set expandtab
+set modifiable
 set encoding=utf-8
 set fileencoding=utf-8
-set fileencodings=iso-2022-jp,euc-jp,utf-8,ucs-2,cp932,sjis
+set fileencodings=utf-8,iso-2022-jp,euc-jp,ucs-2,cp932,sjis
 set tabstop=2
 set shiftwidth=2
 set cursorline
@@ -106,9 +107,9 @@ inoremap <C-h> <Left>
 inoremap <C-l> <Right>
 
 " Ctrl+eでNormalへ
-map <silent><C-e> <Esc>
-map! <silent><C-e> <Esc>
-lmap <silent><C-e> <Esc>
+noremap <silent><C-e> <Esc>:<C-u>noh<CR>
+noremap! <silent><C-e> <Esc>:<C-u>noh<CR>
+lnoremap <silent><C-e> <Esc>:<C-u>noh<CR>
 
 " 次のタブを開く
 nnoremap <silent><C-t> gt
@@ -145,8 +146,8 @@ inoremap <silent><S-Right> <Esc>vl
 vnoremap <silent><Enter> y
 
 " space rでinit.vim読み込み :initeでinit.vimの編集
-noremap <silent><leader>r <Esc>:<C-u>source ~/.config/nvim/init.vim<CR>
-cnoremap <silent>inite :<C-u>tabe ~/.config/nvim/init.vim
+noremap <silent> <leader>r <Esc>:<C-u>source ~/.config/nvim/init.vim<CR>
+cnoremap <silent> inite :<C-u>tabe ~/.config/nvim/init.vim
 
 let g:node_host_prog = '/usr/local/bin/neovim-node-host'
 

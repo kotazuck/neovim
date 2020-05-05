@@ -5,10 +5,38 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'Shougo/denite.nvim'
+hook_add = '''
+  nmap <silent> ,f :Denite file/rec<CR>
+  nmap <silent> ,g :Denite grep<CR>
+  nmap <silent> ,b :Denite buffer<CR>
+  nmap <silent> ,l :Denite line<CR>
+
+  " Define mappings
+  autocmd FileType denite call s:denite_my_settings()
+  function! s:denite_my_settings() abort
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
+    nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+    nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
+  endfunction
+'''
+
+[[plugins]]
 repo = 'Shougo/deoplete.nvim'
 hook_add = '''
+  " launch deoplete at vim startup
   let g:deoplete#enable_at_startup=1
-  let g:deoplete#auto_completion_start_length=2
+
+  call deoplete#custom#option({
+  \   'auto_complete_delay': 0,
+  \   'auto_complete_start_length': 2,
+  \   'skip_multibyte': v:false,
+  \   'smart_case': v:true,
+  \ })
+
   " Tab補完の設定
   inoremap <expr><tab> pumvisible() ? "\<C-n>" :
   \     neosnippet#expandable_or_jumpable() ?
@@ -16,28 +44,51 @@ hook_add = '''
 '''
 
 [[plugins]]
+repo = 'autozimu/LanguageClient-neovim'
+rev = 'next'
+build = 'bash install.sh'
+hook_add = '''
+  let g:LanguageClient_autoStart = 1
+  let g:LanguageClient_serverCommands = {
+  \   'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+  \   'typescript': ['/usr/local/bin/javascript-typescript-stdio'],
+  \   'vue': ['vls']
+  \ }
+  set omnifunc=LanguageClient#complete
+  set completefunc=LanguageClient#complete
+'''
+
+# php
+[[plugins]]
+repo = 'phpactor/phpactor'
+build = 'composer install'
+on_ft = ['php']
+
+[[plugins]]
+repo = 'kristijanhusak/deoplete-phpactor'
+on_ft = ['php']
+
+# js
+[[plugins]]
+repo = 'wokalski/autocomplete-flow'
+hook_add = '''
+  let g:autocomplete_flow#insert_paren_after_function = 0
+'''
+
+[[plugins]]
 repo = 'Shougo/neosnippet'
 hook_add = '''
-  " neosnippet
   imap <C-k> <Plug>(neosnippet_expand_or_jump)
   smap <C-k> <Plug>(neosnippet_expand_or_jump)
   xmap <C-k> <Plug>(neosnippet_expand_target)
+  let g:neosnippet#enable_completed_snippet = 1
 '''
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
-repo = 'Shougo/neco-syntax'
-
-# [[plugins]]
-# repo = 'Yggdroot/indentLine'
-# if = 0
-# hook_add = '''
-#   let g:indentLine_color_term = 239
-#   let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-#   let g:indentLine_enabled = 1
-# '''
+repo = 'Shougo/neosnippet.vim'
 
 [[plugins]]
 repo = 'othree/html5.vim'
@@ -48,29 +99,35 @@ repo = 'othree/yajs.vim'
 [[plugins]]
 repo = 'hail2u/vim-css3-syntax'
 
+# comments
 [[plugins]]
-repo = 'tpope/vim-commentary'
+repo = 'tomtom/tcomment_vim'
 
+# 's' command
 [[plugins]]
 repo = 'tpope/vim-surround'
 
+# file navigation
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
-  let g:NERDTreeShowBookmarks=1
+  let g:NERDTreeShowBookmarks=0
   let g:NERDTreeShowHidden = 1
   let g:NERDTreeDirArrows = 1
   let NERDTreeIgnore = ['\.git$', 'node_modules']
 
   autocmd StdinReadPre * let s:std_in=1
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
+  autocmd vimenter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
   map <C-a> :NERDTreeToggle<CR>
+
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 '''
 
+# sync nerdtree between all tabs
 [[plugins]]
 repo = 'jistr/vim-nerdtree-tabs'
 hook_add = '''
+" デフォルトで表示
   let g:nerdtree_tabs_open_on_console_startup = 1
   let g:nerdtree_tabs_focus_on_files = 1
 '''
@@ -78,6 +135,7 @@ hook_add = '''
 [[plugins]]
 repo = 'mg979/vim-visual-multi'
 
+# auto close html tags
 [[plugins]]
 repo = 'alvan/vim-closetag'
 hook_add = '''
@@ -90,6 +148,7 @@ hook_add = '''
   let g:closetag_close_shortcut = '<leader>>'
 '''
 
+# auto close parentheses
 [[plugins]]
 repo = 'cohama/lexima.vim'
 
@@ -99,7 +158,23 @@ on_ft = ['html', 'css', 'php', 'vue']
 hook_add = '''
   imap ,, <C-y>,
   let g:user_emmet_settings = {
-  \   'lang' : 'ja'
+  \   'variables': {
+  \     'lang' : 'ja'
+  \   },
+  \   'html': {
+  \     'snippets': {
+  \        'html:5': "<!DOCTYPE html>\n"
+  \          ."<html lang=\"${lang}\">\n"
+  \          ."<head>\n"
+  \          ."  <meta charset=\"${charset}\">\n"
+  \          ."  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
+  \          ."  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+  \          ."  <title></title>\n"
+  \          ."</head>\n"
+  \          ."<body>\n\t${child}|\n</body>\n"
+  \          ."</html>",
+  \     }
+  \   }
   \ }
 '''
 
@@ -132,9 +207,7 @@ hook_add = '''
 [[plugins]]
 repo = 'dense-analysis/ale'
 hook_add = '''
-
   " fixer
-  " ale_fixerに登録されているもののみ
   let g:ale_fix_on_save = 0
 
   " lint
@@ -143,7 +216,7 @@ hook_add = '''
   \   'vue': ['eslint'],
   \   'css': ['stylelint'],
   \   'php': ['intelephense'],
-  \}
+  \ }
   " ale_lintersに登録されているもののみ
   let g:ale_linters_explicit = 1
 
@@ -167,11 +240,6 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'phpactor/phpactor'
-build = 'composer install'
-on_ft = ['php']
-
-[[plugins]]
 repo = 'plasticboy/vim-markdown'
 hook_add = '''
   let g:vim_markdown_folding_disabled = 1
@@ -186,6 +254,7 @@ hook_add = '''
   autocmd FileType vue syntax sync fromstart
 '''
 
+# toml syntax highlight
 [[plugins]]
 repo = 'cespare/vim-toml'
 
@@ -195,15 +264,12 @@ on_ft = ['go']
 hook_add = '''
   " 定義ジャンプ等のキーバインドを無効
   let g:go_def_mapping_enabled = 0
+  let g:go_highlight_functions = 1
+  let g:go_highlight_methods = 1
+  let g:go_highlight_fields = 1
+  let g:go_highlight_types = 1
+  let g:go_highlight_operators = 1
+  let g:go_highlight_build_constraints = 1
+  let g:go_gopls_enabled = 1
 '''
 
-[[plugins]]
-repo = 'neoclide/coc.nvim'
-build = './install.sh nightly'
-hook_add = '''
-  let g:coc_node_path = '/usr/local/bin/node'
-  nnoremap <silent><leader>cl :CocList extensions<CR>
-
-  " golang
-  autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
-'''
