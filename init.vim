@@ -49,6 +49,7 @@ set hidden
 set nobackup
 set nowritebackup
 set conceallevel=0
+set clipboard+=unnamed
 
 let g:vim_json_syntax_conceal = 0
 
@@ -65,15 +66,18 @@ endif
 if &compatible
   set nocompatible               " Be iMproved
 endif
-set runtimepath+=~/.config/nvim/dein/repos/github.com/Shougo/dein.vim
-if dein#load_state('~/.config/nvim/dein')
-  call dein#begin('~/.config/nvim/dein')
+set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+if dein#load_state('~/.cache/dein')
+  call dein#begin('~/.cache/dein')
+
+  call dein#add('~/.cache/dein/dein/repos/github.com/Shougo/dein.vim')
 
   call dein#load_toml('~/.config/nvim/dein.toml', {'lazy': 0})
 
   call dein#end()
   call dein#save_state()
 endif
+
 filetype plugin indent on
 syntax enable
 
@@ -85,6 +89,9 @@ endif
 
 " Key Bindings
 let mapleader = "\<Space>"
+
+nnoremap j gj
+nnoremap k gk
 
 " Space s で保存
 nnoremap <silent><C-s> <Esc>:<C-u>w<CR>
@@ -145,9 +152,6 @@ inoremap <silent><S-Right> <Esc>vl
 " VisualでEnterはヤンク
 vnoremap <silent><Enter> y
 
-" space rでinit.vim読み込み :initeでinit.vimの編集
-noremap <silent> <leader>r <Esc>:<C-u>source ~/.config/nvim/init.vim<CR>
-cnoremap <silent> inite :<C-u>tabe ~/.config/nvim/init.vim
-
-let g:node_host_prog = '/usr/local/bin/neovim-node-host'
-
+let g:node_host_prog = substitute(system('which neovim-node-host'), "\n", "", "")
+let g:python_host_prog = substitute(system('which python'), "\n", "", "")
+let g:python3_host_prog = substitute(system('which python3'), "\n", "", "")
