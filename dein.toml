@@ -10,6 +10,32 @@ depends = ['context_filetype.vim']
 
 [[plugins]]
 repo = 'Shougo/context_filetype.vim'
+hook_add = '''
+  let g:context_filetype#filetypes = {
+  \   'php' : [
+  \     {
+  \       'start': '<script\%( [^>]*\)\? type="text/javascript"\%( [^>]*\)\?>',
+  \       'end': '<\/script>',
+  \       'filetype': 'javascript',
+  \     },
+  \     {
+  \       'start': '<script\%( [^>]*\)\?>',
+  \       'end': '<\/script>',
+  \       'filetype': 'javascript',
+  \     },
+  \     {
+  \       'start': '<style\%( [^>]*\)\?>',
+  \       'end': '<\/style>',
+  \       'filetype': 'css',
+  \     },
+  \     {
+  \       'start': '<[^>]\+ style=\([''"]\)',
+  \       'end': '\1',
+  \       'filetype': 'css',
+  \     },
+  \   ],
+  \ }
+'''
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
@@ -143,7 +169,7 @@ hook_add = '''
   \          ."  <meta charset=\"${charset}\">\n"
   \          ."  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
   \          ."  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
-  \          ."  <title></title>\n"
+  \          ."  <title>Document</title>\n"
   \          ."</head>\n"
   \          ."<body>\n\t${child}|\n</body>\n"
   \          ."</html>",
@@ -247,4 +273,16 @@ hook_add = '''
   let g:go_highlight_build_constraints = 1
   let g:go_gopls_enabled = 1
 '''
+
+# Git
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+hook_add = '''
+  nmap <silent> <C-g><C-n> <Plug>(GitGutterNextHunk)
+  nmap <silent> <C-g><C-p> <Plug>(GitGutterPrevHunk)
+'''
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
 

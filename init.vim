@@ -39,6 +39,7 @@ set statusline+=%#Cursor#               " colour
 set statusline+=%#CursorLine#     " colour
 set statusline+=\ %t\                   " short file name
 set statusline+=%=                          " right align
+set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
 set statusline+=%#CursorLine#   " colour
 set statusline+=\ %Y\                   " file type
 set statusline+=%#CursorIM#     " colour
